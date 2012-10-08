@@ -15,8 +15,9 @@
 #   end
 #
 class Keikokuc::Notification
-  ATTRS = %w[message target severity url
-    producer_api_key remote_id errors].freeze
+  ATTRS = %w[message url severity
+             target_name account_email
+             producer_api_key remote_id errors].freeze
 
   attr_accessor *ATTRS
 

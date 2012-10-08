@@ -8,10 +8,11 @@ module Keikokuc
       fake_client.
         should_receive(:post_notification).with do |args|
           args[:message].should == 'hello'
-        end.
-        and_return([{ id: 1 }, nil])
+          args[:account_email].should == 'harold@heroku.com'
+        end.and_return([{ id: 1 }, nil])
 
-      notification = build(:notification, message: 'hello')
+      notification = build(:notification, message: 'hello',
+                                          account_email: 'harold@heroku.com')
 
       result = notification.publish
       result.should be_true
