@@ -1,11 +1,14 @@
 class Keikokuc::Notification
-  ATTRS = %w[message target severity url producer_api_key remote_id errors].freeze
+  ATTRS = %w[message target severity url
+    producer_api_key remote_id errors].freeze
 
   attr_accessor *ATTRS
 
   def initialize(opts = {})
     ATTRS.each do |attribute|
-      send("#{attribute}=", opts[attribute]) if opts.has_key?(attribute.to_sym)
+      if opts.has_key?(attribute.to_sym)
+        send("#{attribute}=", opts[attribute])
+      end
     end
   end
 
