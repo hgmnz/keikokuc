@@ -1,9 +1,34 @@
+# Public: Encapsulates a keikoku notification
+#
+# This is the entry point for dealing with notifications
+#
+# Examples
+#
+#   notification = Keikokuc::Notification.new(message: 'hello',
+#                                             severity: 'info',
+#                                             target: 'sunny-skies-42'
+#                                             producer_api_key: 'abcd')
+#   if notificaiton.publish
+#     # persist notification
+#   else
+#     # handle error
+#   end
+#
 class Keikokuc::Notification
   ATTRS = %w[message target severity url
     producer_api_key remote_id errors].freeze
 
   attr_accessor *ATTRS
 
+  # Public: class constructor
+  #
+  # opts - a hash of attributes to be set on constructed object
+  #
+  # Examples
+  #
+  #   notification = Keikokuc::Notification.new(message: 'hello')
+  #
+  # All keys on matching ATTRS will be set
   def initialize(opts = {})
     ATTRS.each do |attribute|
       if opts.has_key?(attribute.to_sym)
@@ -12,6 +37,12 @@ class Keikokuc::Notification
     end
   end
 
+  # Public: publishes this notification to keikoku
+  #
+  # This method sets the `remote_id` attribute if it succeeds.
+  # If it fails, the `errors` hash will be populated.
+  #
+  # Returns a boolean set to true if publishing succeeded
   def publish
     response, error = client.post_notification(to_hash)
     if error.nil?
@@ -23,6 +54,9 @@ class Keikokuc::Notification
     error.nil?
   end
 
+  # Internal: coerces this notification to a hash
+  #
+  # Returns this notification's attributes as a hash
   def to_hash
     ATTRS.inject({}) do |h, attribute|
       h[attribute.to_sym] = send(attribute)
@@ -31,7 +65,7 @@ class Keikokuc::Notification
   end
 
 private
-  def client
+  def client # :nodoc:
     @client ||= Keikokuc::Client.new
   end
 end
