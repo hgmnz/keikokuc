@@ -33,7 +33,7 @@ class Keikokuc::Notification
   def initialize(opts = {})
     ATTRS.each do |attribute|
       if opts.has_key?(attribute.to_sym)
-        send("#{attribute}=", opts[attribute])
+        send("#{attribute}=", opts[attribute.to_sym])
       end
     end
   end

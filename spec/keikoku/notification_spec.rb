@@ -37,5 +37,11 @@ module Keikokuc
       notification.remote_id.should be_nil
       notification.errors[:attributes][:message].should == ['is not present']
     end
+
+    it 'stores attributes as instance vars' do
+      notification = Notification.new(message: 'foo')
+      notification.message.should == 'foo'
+    end
+
   end
 end
