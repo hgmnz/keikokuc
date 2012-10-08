@@ -5,8 +5,8 @@ require 'factory_girl'
 Gem::Specification.new do |gem|
   gem.authors       = ["Harold Giménez"]
   gem.email         = ["harold.gimenez@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Keikoku API client}
+  gem.summary       = %q{Keikoku API client}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
