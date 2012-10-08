@@ -13,12 +13,12 @@ class Keikokuc::Notification
   end
 
   def publish
-    body, error = client.post_notification(to_hash)
+    response, error = client.post_notification(to_hash)
     if error.nil?
-      self.remote_id = body[:id]
+      self.remote_id = response[:id]
       self.errors = nil
     elsif error == Keikokuc::Client::InvalidNotification
-      self.errors = body[:errors]
+      self.errors = response[:errors]
     end
     error.nil?
   end
