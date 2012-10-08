@@ -10,13 +10,19 @@ class Keikokuc::Client
 
   InvalidNotification = Class.new
 
+  attr_accessor :producer_api_key
+
+  def initialize(opts = {})
+    @producer_api_key = opts[:producer_api_key]
+  end
+
   # Internal: posts a new notification to keikoku
   #
   # attributes - a hash containing notification attributes
   #
   # Examples
   #
-  #   client = Keikokuc::Client.new
+  #   client = Keikokuc::Client.new(producer_api_key: 'abcd')
   #   response, error = client.post_notification(message: 'hello')
   #
   # Returns
@@ -32,7 +38,7 @@ class Keikokuc::Client
   #   invalid notification attributes
   def post_notification(attributes)
     begin
-      response = notifications_api.post(encode_json(attributes))
+      response = notifications_api.post(encode_json(attributes), {'X-KEIKOKU-AUTH' => producer_api_key})
     rescue RestClient::UnprocessableEntity => e
       response = e.response
       error    = InvalidNotification

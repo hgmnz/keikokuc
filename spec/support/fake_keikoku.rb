@@ -8,12 +8,20 @@ class FakeKeikoku
     @publishers << opts
   end
 
+  def publisher_by_api_key(api_key)
+    @publishers.detect { |p| p[:api_key] == api_key }
+  end
+
   def call(env)
     with_rack_env(env) do
       if request_path == '/api/v1/notifications' && request_verb == 'POST'
-        notification = Notification.new({id: next_id}.merge(request_body))
-        @notifications << notification
-        [200, { }, [Yajl::Encoder.encode({id: notification.id})]]
+        if publisher_by_api_key(request_api_key)
+          notification = Notification.new({id: next_id}.merge(request_body))
+          @notifications << notification
+          [200, { }, [Yajl::Encoder.encode({id: notification.id})]]
+        else
+          [401, { }, ["Not authorized"]]
+        end
       end
     end
   end
@@ -43,6 +51,10 @@ private
     raw_body = rack_env["rack.input"].read
     rack_env["rack.input"].rewind
     Yajl::Parser.parse(raw_body)
+  end
+
+  def request_api_key
+    rack_env["HTTP_X_KEIKOKU_AUTH"]
   end
 
   def next_id

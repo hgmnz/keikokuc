@@ -9,9 +9,10 @@ module Keikokuc
     it 'publishes a new notification' do
       ShamRack.mount(fake_keikoku, "keikoku.herokuapp.com", 443)
       fake_keikoku.register_publisher({api_key: 'abc'})
-      result, error = Client.new.post_notification(message:  'hello',
-                                                     severity: 'info',
-                                                     api_key:  'abc')
+      client = Client.new(producer_api_key: 'abc')
+      result, error = client.post_notification(message:  'hello',
+                                               severity: 'info',
+                                               api_key:  'abc')
       result[:id].should_not be_nil
       error.should be_nil
     end
