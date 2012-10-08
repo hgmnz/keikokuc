@@ -9,6 +9,7 @@ class Keikokuc::Client
   include HandlesTimeout
 
   InvalidNotification = Class.new
+  Unauthorized = Class.new
 
   attr_accessor :producer_api_key
 
@@ -36,14 +37,16 @@ class Keikokuc::Client
   # * `Client::Timeout` if the request takes longer than 5 seconds
   # * `Client::InvalidNotification` if the response indicates
   #   invalid notification attributes
+  # * `Client::Unauthorized` if API key auth fails
   def post_notification(attributes)
     begin
       response = notifications_api.post(encode_json(attributes), {'X-KEIKOKU-AUTH' => producer_api_key})
+      [parse_json(response), nil]
     rescue RestClient::UnprocessableEntity => e
-      response = e.response
-      error    = InvalidNotification
+      [parse_json(e.response), InvalidNotification]
+    rescue RestClient::Unauthorized => e
+      [{}, Unauthorized]
     end
-    [parse_json(response), error]
   end
   handle_timeout :post_notification
 
