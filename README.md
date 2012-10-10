@@ -1,6 +1,8 @@
 # Keikokuc
 
-TODO: Write a gem description
+Wrapper to the keikoku API
+
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/hgmnz/keikokuc)
 
 ## Installation
 
@@ -16,14 +18,13 @@ Or install it yourself as:
 
     $ gem install keikokuc
 
-## Usage
+## Docs
 
-TODO: Write usage instructions here
+For usage examples please see the docs:
 
-## Contributing
+[http://rdoc.info/github/hgmnz/keikokuc/master/frames](http://rdoc.info/github/hgmnz/keikokuc/master/frames)
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+## License
+
+keikokuc is copyright (c) Harold Giménez and is released under the terms of the
+MIT License found in the LICENSE file.
