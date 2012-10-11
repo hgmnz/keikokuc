@@ -85,4 +85,22 @@ module Keikokuc
       error.should == Client::Unauthorized
     end
   end
+
+  describe Client, '#read_notification' do
+    include_context 'client specs'
+    it 'marks the notification as read' do
+      ShamRack.mount(fake_keikoku, "keikoku.herokuapp.com", 443)
+      fake_keikoku.register_publisher(api_key: 'abc')
+      fake_keikoku.register_user(email: 'harold@heroku.com', password: 'pass')
+      client = Client.new(user: 'harold@heroku.com', password: 'pass')
+      notification = build(:notification, account_email: 'harold@heroku.com', producer_api_key: 'abc')
+      notification.publish or raise "Notification publish error"
+
+      response, error = client.read_notification(notification.remote_id)
+      error.should be_nil
+
+      response[:read_by].should == 'harold@heroku.com'
+      response[:read_at].should_not be_nil
+    end
+  end
 end

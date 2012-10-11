@@ -44,6 +44,14 @@ class FakeKeikoku
         else
           [401, { }, ["Not authorized"]]
         end
+      elsif request_path =~ %r{/api/v1/notifications/([^/]+)/read} && request_verb == 'POST'
+        if current_user = authenticate_consumer
+          notification = notifications_for_user(current_user).detect do |notification|
+            notification.to_hash[:id].to_s == $1.to_s
+          end
+          notification.mark_read_by!(current_user)
+          [200, {}, [Yajl::Encoder.encode({read_by: current_user, read_at: Time.now})]]
+        end
       end
     end
   end
@@ -106,6 +114,10 @@ private
 
     def to_hash
       @opts
+    end
+
+    def mark_read_by!(user)
+      (@read_by ||= []) << user
     end
   end
 end

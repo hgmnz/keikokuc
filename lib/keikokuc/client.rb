@@ -79,6 +79,15 @@ class Keikokuc::Client
   end
   handle_timeout :get_notifications
 
+  # Public: Marks a notification as read
+  #
+  # remote_id - the keikoku id for the notification to mark as read
+  #
+  def read_notification(remote_id)
+    response = notifications_api["/#{remote_id}/read"].post ''
+    [parse_json(response), nil]
+  end
+
 private
   def notifications_api # :nodoc:
     @notifications_api ||= RestClient::Resource.new(api_url,
