@@ -11,10 +11,12 @@ class Keikokuc::Client
   InvalidNotification = Class.new
   Unauthorized = Class.new
 
-  attr_accessor :producer_api_key
+  attr_accessor :producer_api_key, :user, :password
 
   def initialize(opts = {})
     @producer_api_key = opts[:producer_api_key]
+    @user             = opts[:user]
+    @password         = opts[:password]
   end
 
   # Internal: posts a new notification to keikoku
@@ -44,15 +46,44 @@ class Keikokuc::Client
       [parse_json(response), nil]
     rescue RestClient::UnprocessableEntity => e
       [parse_json(e.response), InvalidNotification]
-    rescue RestClient::Unauthorized => e
+    rescue RestClient::Unauthorized
       [{}, Unauthorized]
     end
   end
   handle_timeout :post_notification
 
+  # Internal: gets all active notifications for a user
+  #
+  # Examples
+  #
+  #   client = Keikokuc::Client.new(user: 'user@example.com', password: 'pass')
+  #   response, error = client.get_notifications
+  #
+  # Returns
+  #
+  # two objects:
+  #   The response as a hash
+  #   The error if any (nil if no error)
+  #
+  # Possible errors include:
+  #
+  # * `Client::Timeout` if the request takes longer than 5 seconds
+  # * `Client::Unauthorized` if HTTP Basic auth fails
+  def get_notifications
+    begin
+      response = notifications_api.get
+      [parse_json(response), nil]
+    rescue RestClient::Unauthorized
+      [{}, Unauthorized]
+    end
+  end
+  handle_timeout :get_notifications
+
 private
   def notifications_api # :nodoc:
-    @notifications_api ||= RestClient::Resource.new(api_url)
+    @notifications_api ||= RestClient::Resource.new(api_url,
+                                                    user: user,
+                                                    password: password)
   end
 
   def api_url # :nodoc:
@@ -67,7 +98,16 @@ private
     symbolize_keys(Yajl::Parser.parse(data)) if data
   end
 
-  def symbolize_keys(hash) # :nodoc:
+  def symbolize_keys(object) # :nodoc:
+    case object
+    when Hash
+      symbolize_hash_keys(object)
+    when Array
+      object.map { |item| symbolize_hash_keys(item) }
+    end
+  end
+
+  def symbolize_hash_keys(hash)
     hash.inject({}) do |result, (k, v)|
       result[k.to_sym] = v
       result

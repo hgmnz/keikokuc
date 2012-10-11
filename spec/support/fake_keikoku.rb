@@ -2,14 +2,29 @@ class FakeKeikoku
   def initialize
     @publishers = []
     @notifications = []
+    @users = []
   end
 
   def register_publisher(opts)
     @publishers << opts
   end
 
+  def register_user(opts)
+    @users << opts
+  end
+
   def publisher_by_api_key(api_key)
     @publishers.detect { |p| p[:api_key] == api_key }
+  end
+
+  def find_user(user, pass)
+    @users.detect { |u| u[:email] == user && u[:password] == pass }
+  end
+
+  def notifications_for_user(email)
+    @notifications.select do |notification|
+      notification.to_hash['account_email'] == email
+    end
   end
 
   def call(env)
@@ -19,6 +34,13 @@ class FakeKeikoku
           notification = Notification.new({id: next_id}.merge(request_body))
           @notifications << notification
           [200, { }, [Yajl::Encoder.encode({id: notification.id})]]
+        else
+          [401, { }, ["Not authorized"]]
+        end
+      elsif request_path == '/api/v1/notifications' && request_verb == 'GET'
+        if current_user = authenticate_consumer
+          notifications = notifications_for_user(current_user).map(&:to_hash)
+          [200, { }, [Yajl::Encoder.encode(notifications)]]
         else
           [401, { }, ["Not authorized"]]
         end
@@ -57,6 +79,16 @@ private
     rack_env["HTTP_X_KEIKOKU_AUTH"]
   end
 
+  def authenticate_consumer
+    auth = Rack::Auth::Basic::Request.new(rack_env)
+    if auth.provided? && auth.basic? && creds = auth.credentials
+      # creds looks like [user, password]
+      if find_user(*creds)
+        creds.first
+      end
+    end
+  end
+
   def next_id
     @@sequence ||= 0
     @@sequence += 1
@@ -70,6 +102,10 @@ private
           value
         end
       end
+    end
+
+    def to_hash
+      @opts
     end
   end
 end
