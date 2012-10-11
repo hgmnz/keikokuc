@@ -44,4 +44,17 @@ module Keikokuc
     end
 
   end
+
+  describe Notification, '#client' do
+    it 'defaults to a properly constructer Keikokuc::Client' do
+      notification = build(:notification, producer_api_key: 'fake-api-key')
+      notification.client.should be_kind_of Keikokuc::Client
+      notification.client.producer_api_key.should == 'fake-api-key'
+    end
+
+    it 'can be injected' do
+      notification = Notification.new(client: :foo)
+      notification.client.should == :foo
+    end
+  end
 end
