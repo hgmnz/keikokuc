@@ -17,7 +17,7 @@
 class Keikokuc::Notification
   ATTRS = %w[message url severity
              target_name account_email
-             producer_api_key remote_id errors].freeze
+             producer_api_key remote_id errors read_at].freeze
 
   attr_accessor *ATTRS
 
@@ -36,6 +36,7 @@ class Keikokuc::Notification
         send("#{attribute}=", opts[attribute.to_sym])
       end
     end
+    @read   = false
     @client = opts[:client]
   end
 
@@ -54,6 +55,27 @@ class Keikokuc::Notification
       self.errors = response[:errors]
     end
     error.nil?
+  end
+
+  # Public: marks this notification as read on keikoku
+  #
+  # Marks the notification as read, after which it will
+  # no longer be displayed to any consumer for this user
+  #
+  # Returns a boolean set to true if marking as read succeeded
+  def read
+    response, error = client.read_notification(remote_id)
+    if error.nil?
+      self.read_at = response[:read_at]
+    end
+    error.nil?
+  end
+
+  # Public: whether this notification is marked as read by this user
+  #
+  # Returns true if the user has marked this notification as read
+  def read?
+    !!@read_at
   end
 
   # Internal: coerces this notification to a hash

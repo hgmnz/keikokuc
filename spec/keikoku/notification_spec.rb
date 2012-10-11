@@ -42,7 +42,50 @@ module Keikokuc
       notification = Notification.new(message: 'foo')
       notification.message.should == 'foo'
     end
+  end
 
+  describe Notification, '#read' do
+    it 'marks as read to keikoku' do
+      fake_client = double
+
+      fake_client.should_receive(:read_notification).
+        with('1234').
+        and_return([{read_at: Time.now}, nil])
+
+      notification = Notification.new(remote_id: '1234', client: fake_client)
+
+      result = notification.read
+      result.should be_true
+
+      notification.read_at.should_not be_nil
+      notification.should be_read
+    end
+
+    it 'handles errors' do
+      fake_client = double
+      fake_client.stub(:read_notification).
+        with('1234').
+        and_return([{}, :some_error])
+
+      notification = Notification.new(remote_id: '1234', client: fake_client)
+
+      result = notification.read
+      result.should be_false
+
+      notification.read_at.should be_nil
+      notification.should_not be_read
+    end
+  end
+
+  describe Notification, '#read?' do
+    it 'is true if the read_at is known' do
+      notification = build(:notification, read_at: nil)
+      notification.read?.should be_false
+
+      notification.read_at = Time.now
+
+      notification.read?.should be_true
+    end
   end
 
   describe Notification, '#client' do
