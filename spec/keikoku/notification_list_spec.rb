@@ -16,6 +16,7 @@ module Keikokuc
         user_notifications.map do |h|
           h[:message]
         end.should include notification.message
+        notification.should be_kind_of Notification
       end
     end
 
