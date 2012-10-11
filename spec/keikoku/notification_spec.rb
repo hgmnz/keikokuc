@@ -4,7 +4,6 @@ module Keikokuc
   describe Notification, '#publish' do
     it 'publishes to keikoku and stores an id' do
       fake_client = double
-      Client.stub(new: fake_client)
       fake_client.
         should_receive(:post_notification).with do |args|
           args[:message].should == 'hello'
@@ -12,7 +11,8 @@ module Keikokuc
         end.and_return([{ id: 1 }, nil])
 
       notification = build(:notification, message: 'hello',
-                                          account_email: 'harold@heroku.com')
+                                          account_email: 'harold@heroku.com',
+                                          client: fake_client)
 
       result = notification.publish
       result.should be_true
