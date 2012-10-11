@@ -66,7 +66,6 @@ class Keikokuc::Notification
     end
   end
 
-private
   def client # :nodoc:
     @client ||= Keikokuc::Client.new(producer_api_key: producer_api_key)
   end
