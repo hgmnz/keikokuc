@@ -8,7 +8,7 @@
 #                                             severity: 'info',
 #                                             target: 'sunny-skies-42'
 #                                             producer_api_key: 'abcd')
-#   if notificaiton.publish
+#   if notification.publish
 #     # persist notification
 #   else
 #     # handle error
@@ -21,7 +21,7 @@ class Keikokuc::Notification
 
   attr_accessor *ATTRS
 
-  # Public: class constructor
+  # Public: Initialize a notification
   #
   # opts - a hash of attributes to be set on constructed object
   #
