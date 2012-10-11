@@ -9,4 +9,11 @@ FactoryGirl.define do
 
     initialize_with { new(attributes) }
   end
+
+  factory :notification_list, class: Keikokuc::NotificationList do
+    user     'user@example.com'
+    password 'pass'
+
+    initialize_with { new(attributes) }
+  end
 end
