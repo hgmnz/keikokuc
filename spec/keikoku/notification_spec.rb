@@ -22,14 +22,14 @@ module Keikokuc
 
     it 'returns false when publishing fails and stores errors' do
       fake_client = double
-      Client.stub(new: fake_client)
       fake_client.
         should_receive(:post_notification).with do |args|
           args[:message].should be_nil
         end.
-        and_return([{ errors: { attributes: { message: ['is not present'] }}}, Keikokuc::Client::InvalidNotification])
+        and_return([{ errors: { attributes: { message: ['is not present'] }}},
+                   Keikokuc::Client::InvalidNotification])
 
-      notification = build(:notification, message: nil)
+      notification = build(:notification, message: nil, client: fake_client)
 
       result = notification.publish
       result.should be_false

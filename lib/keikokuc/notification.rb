@@ -36,6 +36,7 @@ class Keikokuc::Notification
         send("#{attribute}=", opts[attribute.to_sym])
       end
     end
+    @client = opts[:client]
   end
 
   # Public: publishes this notification to keikoku

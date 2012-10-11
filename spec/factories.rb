@@ -6,5 +6,7 @@ FactoryGirl.define do
     target_name   'cloudy-skies-243'
     severity      'info'
     account_email 'harold@heroku.com'
+
+    initialize_with { new(attributes) }
   end
 end
