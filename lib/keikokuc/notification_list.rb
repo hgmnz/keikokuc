@@ -85,6 +85,13 @@ class Keikokuc::NotificationList
     self.size.zero?
   end
 
+  # Internal: assigns notifications
+  #
+  # Allos notifications to be injected, useful in tests
+  def notifications=(new_notification)
+    @notifications = new_notification
+  end
+
 private
   def client # :nodoc:
     @client ||= Client.new(user: user, password: password)

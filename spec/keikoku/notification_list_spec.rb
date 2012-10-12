@@ -103,4 +103,14 @@ module Keikokuc
       expect(notification_list.empty?).to be_false
     end
   end
+
+  describe NotificationList, '#notifications=' do
+    it 'assigns notifications' do
+      list = build(:notification_list)
+      list.notifications = [build(:notification, message: 'one'),
+                            build(:notification, message: 'two')]
+
+      expect(list.map { |n| n.message }).to eq(%w[one two])
+    end
+  end
 end
