@@ -87,6 +87,20 @@ module Keikokuc
 
       expect(list.read_all).to be_false
     end
+  end
 
+  describe NotificationList, '#empty?' do
+    include_context 'specs with a fake client'
+    include_context 'with user notifications'
+    it 'is true when there are no notifications' do
+      fake_client.stub(get_notifications: [user_notifications, nil])
+      notification_list = build(:notification_list, client: fake_client)
+
+      expect(notification_list.empty?).to be_true
+
+      notification_list.fetch
+
+      expect(notification_list.empty?).to be_false
+    end
   end
 end

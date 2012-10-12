@@ -78,6 +78,13 @@ class Keikokuc::NotificationList
     @notifications.each { |n| yield n }
   end
 
+  # Public: wether there are no notifications
+  #
+  # Returns a Boolean set to true if there is at least one notification
+  def empty?
+    self.size.zero?
+  end
+
 private
   def client # :nodoc:
     @client ||= Client.new(user: user, password: password)
