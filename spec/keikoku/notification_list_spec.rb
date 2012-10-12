@@ -9,14 +9,14 @@ module Keikokuc
       list = build(:notification_list, client: fake_client)
 
       result = list.fetch
-      result.should be_true
+      expect(result).to be_true
 
-      list.size.should == 2
+      expect(list.size).to eq(2)
       list.each do |notification|
-        user_notifications.map do |h|
+        expect(user_notifications.map do |h|
           h[:message]
-        end.should include notification.message
-        notification.should be_kind_of Notification
+        end).to include(notification.message)
+        expect(notification).to be_kind_of(Notification)
       end
     end
 

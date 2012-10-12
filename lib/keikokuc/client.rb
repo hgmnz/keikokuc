@@ -94,7 +94,9 @@ class Keikokuc::Client
   def read_notification(remote_id)
     begin
       response = notifications_api["/#{remote_id}/read"].post ''
-      [parse_json(response), nil]
+      parsed_response = parse_json(response)
+      parsed_response[:read_at] = DateTime.parse(parsed_response[:read_at])
+      [parsed_response, nil]
     rescue RestClient::Unauthorized
       [{}, Unauthorized]
     end

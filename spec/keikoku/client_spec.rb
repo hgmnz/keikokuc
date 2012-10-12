@@ -15,8 +15,8 @@ module Keikokuc
       client = Client.new(producer_api_key: 'abc')
       result, error = client.post_notification(message:  'hello',
                                                severity: 'info')
-      result[:id].should_not be_nil
-      error.should be_nil
+      expect(result[:id]).not_to be_nil
+      expect(error).to be_nil
     end
 
     it 'handles invalid notifications' do
@@ -25,8 +25,8 @@ module Keikokuc
       end
 
       response, error = Client.new.post_notification({})
-      error.should == Client::InvalidNotification
-      response[:errors].should == 'srorre'
+      expect(error).to be Client::InvalidNotification
+      expect(response[:errors]).to eq('srorre')
     end
 
     it 'handles authentication failures' do
@@ -35,15 +35,15 @@ module Keikokuc
       client = Client.new(producer_api_key: 'bad one')
       result, error = client.post_notification(message:  'hello',
                                                severity: 'info')
-      result[:id].should be_nil
-      error.should == Client::Unauthorized
+      expect(result[:id]).to be_nil
+      expect(error).to eq Client::Unauthorized
     end
 
     it 'handles timeouts' do
       RestClient::Resource.any_instance.stub(:post).and_raise Timeout::Error
       response, error = Client.new.post_notification({})
-      response.should be_nil
-      error.should == Client::RequestTimeout
+      expect(response).to be_nil
+      expect(error).to eq(Client::RequestTimeout)
     end
   end
 
@@ -61,17 +61,17 @@ module Keikokuc
 
       notifications, error = client.get_notifications
 
-      error.should be_nil
-      notifications.should have(1).item
+      expect(error).to be_nil
+      expect(notifications).to have(1).item
 
-      notifications.first[:message].should == 'find me!'
+      expect(notifications.first[:message]).to eq('find me!')
     end
 
     it 'handles timeouts' do
       RestClient::Resource.any_instance.stub(:get).and_raise Timeout::Error
       response, error = Client.new.get_notifications
-      response.should be_nil
-      error.should == Client::RequestTimeout
+      expect(response).to be_nil
+      expect(error).to eq(Client::RequestTimeout)
     end
 
     it 'handles authentication failures' do
@@ -81,8 +81,8 @@ module Keikokuc
 
       response, error = client.get_notifications
 
-      response.should be_empty
-      error.should == Client::Unauthorized
+      expect(response).to be_empty
+      expect(error).to eq(Client::Unauthorized)
     end
   end
 
@@ -97,10 +97,10 @@ module Keikokuc
       notification.publish or raise "Notification publish error"
 
       response, error = client.read_notification(notification.remote_id)
-      error.should be_nil
+      expect(error).to be_nil
 
-      response[:read_by].should == 'harold@heroku.com'
-      response[:read_at].should_not be_nil
+      expect(response[:read_by]).to eq('harold@heroku.com')
+      expect(response[:read_at]).to be_within(1).of(DateTime.now)
     end
 
     it 'handles authentication errors' do
@@ -108,15 +108,15 @@ module Keikokuc
       fake_keikoku.register_user(email: 'harold@heroku.com', password: 'pass')
       client = Client.new(user: 'harold@heroku.com', password: 'bad-pass')
       response, error = client.read_notification(1)
-      response.should be_empty
-      error.should == Client::Unauthorized
+      expect(response).to be_empty
+      expect(error).to eq(Client::Unauthorized)
     end
 
     it 'handles timeouts' do
       RestClient::Resource.any_instance.stub(:post).and_raise Timeout::Error
       response, error = Client.new.read_notification(1)
-      response.should be_nil
-      error.should == Client::RequestTimeout
+      expect(response).to be_nil
+      expect(error).to eq(Client::RequestTimeout)
     end
   end
 end

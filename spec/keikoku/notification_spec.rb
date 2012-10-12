@@ -6,8 +6,8 @@ module Keikokuc
       fake_client = double
       fake_client.
         should_receive(:post_notification).with do |args|
-          args[:message].should == 'hello'
-          args[:account_email].should == 'harold@heroku.com'
+          expect(args[:message]).to eq('hello')
+          expect(args[:account_email]).to eq('harold@heroku.com')
         end.and_return([{ id: 1 }, nil])
 
       notification = build(:notification, message: 'hello',
@@ -15,16 +15,16 @@ module Keikokuc
                                           client: fake_client)
 
       result = notification.publish
-      result.should be_true
+      expect(result).to be_true
 
-      notification.remote_id.should == 1
+      expect(notification.remote_id).to eq(1)
     end
 
     it 'returns false when publishing fails and stores errors' do
       fake_client = double
       fake_client.
         should_receive(:post_notification).with do |args|
-          args[:message].should be_nil
+          expect(args[:message]).to be_nil
         end.
         and_return([{ errors: { attributes: { message: ['is not present'] }}},
                    Keikokuc::Client::InvalidNotification])
@@ -32,15 +32,15 @@ module Keikokuc
       notification = build(:notification, message: nil, client: fake_client)
 
       result = notification.publish
-      result.should be_false
+      expect(result).to be_false
 
-      notification.remote_id.should be_nil
-      notification.errors[:attributes][:message].should == ['is not present']
+      expect(notification.remote_id).to be_nil
+      expect(notification.errors[:attributes][:message]).to eq(['is not present'])
     end
 
     it 'stores attributes as instance vars' do
       notification = Notification.new(message: 'foo')
-      notification.message.should == 'foo'
+      expect(notification.message).to eq('foo')
     end
   end
 
@@ -55,10 +55,10 @@ module Keikokuc
       notification = Notification.new(remote_id: '1234', client: fake_client)
 
       result = notification.read
-      result.should be_true
+      expect(result).to be_true
 
-      notification.read_at.should_not be_nil
-      notification.should be_read
+      expect(notification.read_at).to be_within(1).of(Time.now)
+      expect(notification).to be_read
     end
 
     it 'handles errors' do
@@ -70,34 +70,34 @@ module Keikokuc
       notification = Notification.new(remote_id: '1234', client: fake_client)
 
       result = notification.read
-      result.should be_false
+      expect(result).to be_false
 
-      notification.read_at.should be_nil
-      notification.should_not be_read
+      expect(notification.read_at).to be_nil
+      expect(notification).not_to be_read
     end
   end
 
   describe Notification, '#read?' do
     it 'is true if the read_at is known' do
       notification = build(:notification, read_at: nil)
-      notification.read?.should be_false
+      expect(notification.read?).to be_false
 
       notification.read_at = Time.now
 
-      notification.read?.should be_true
+      expect(notification.read?).to be_true
     end
   end
 
   describe Notification, '#client' do
     it 'defaults to a properly constructer Keikokuc::Client' do
       notification = build(:notification, producer_api_key: 'fake-api-key')
-      notification.client.should be_kind_of Keikokuc::Client
-      notification.client.producer_api_key.should == 'fake-api-key'
+      expect(notification.client).to be_kind_of(Keikokuc::Client)
+      expect(notification.client.producer_api_key).to eq('fake-api-key')
     end
 
     it 'can be injected' do
       notification = Notification.new(client: :foo)
-      notification.client.should == :foo
+      expect(notification.client).to eq(:foo)
     end
   end
 end
