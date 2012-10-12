@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 require File.expand_path('../lib/keikokuc/version', __FILE__)
-require 'factory_girl'
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Harold Giménez"]

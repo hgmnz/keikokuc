@@ -5,6 +5,7 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'keikokuc'
+require 'factory_girl'
 require 'factories'
 require 'support/fake_keikoku'
 RSpec.configure do |config|
