@@ -107,8 +107,8 @@ class Keikokuc::Client
 private
   def notifications_api # :nodoc:
     @notifications_api ||= RestClient::Resource.new(api_url,
-                                                    user: user,
-                                                    password: password)
+                                                    :user     => user,
+                                                    :password => password)
   end
 
   def api_url # :nodoc:

@@ -46,7 +46,8 @@ class Keikokuc::NotificationList
     result, error = client.get_notifications
     if error.nil?
       @notifications = result.map do |attributes|
-        attributes.merge!(client: client, remote_id: attributes.delete(:id))
+        attributes.merge!(:client    => client,
+                          :remote_id => attributes.delete(:id))
         Keikokuc::Notification.new(attributes)
       end
     end
@@ -94,6 +95,7 @@ class Keikokuc::NotificationList
 
 private
   def client # :nodoc:
-    @client ||= Client.new(user: user, password: password)
+    @client ||= Client.new(:user     => user,
+                           :password => password)
   end
 end

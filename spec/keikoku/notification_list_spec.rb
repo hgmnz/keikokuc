@@ -8,18 +8,18 @@ module Keikokuc
     let(:user_notifications) do
       [
         {
-          id:           1,
-          target_name:  'flying-monkey-123',
-          message:      'Database HEROKU_POSTGRESQL_BROWN is over row limits',
-          url:          'https://devcenter.heroku.com/how-to-fix-problem',
-          severity:     'info'
+          :id          => 1,
+          :target_name => 'flying-monkey-123',
+          :message     => 'Database HEROKU_POSTGRESQL_BROWN is over row limits',
+          :url         => 'https://devcenter.heroku.com/how-to-fix-problem',
+          :severity    => 'info'
         },
         {
-          id:           2,
-          target_name:  'rising-cloud-42',
-          message:      'High OOM rates',
-          url:          'https://devcenter.heroku.com/oom',
-          severity:     'fatal'
+          :id          => 2,
+          :target_name => 'rising-cloud-42',
+          :message     => 'High OOM rates',
+          :url         => 'https://devcenter.heroku.com/oom',
+          :severity    => 'fatal'
         }
       ]
     end
@@ -31,7 +31,7 @@ module Keikokuc
     it 'finds all notifications for the current user' do
       fake_client.should_receive(:get_notifications).
         and_return([user_notifications, nil])
-      list = build(:notification_list, client: fake_client)
+      list = build(:notification_list, :client => fake_client)
 
       result = list.fetch
       expect(result).to be_true
@@ -56,11 +56,11 @@ module Keikokuc
 
       now = Time.now
       fake_client.should_receive(:read_notification).with(1).
-        and_return([{read_at: now}, nil])
+        and_return([{:read_at => now}, nil])
       fake_client.should_receive(:read_notification).with(2).
-        and_return([{read_at: now}, nil])
+        and_return([{:read_at => now}, nil])
 
-      list = build(:notification_list, client: fake_client)
+      list = build(:notification_list, :client => fake_client)
 
       list.fetch or raise "error fetching"
 
@@ -73,7 +73,7 @@ module Keikokuc
     end
 
     it 'returns false if any notification fails to be marked as read' do
-      fake_client.stub(get_notifications: [user_notifications, nil])
+      fake_client.stub(:get_notifications => [user_notifications, nil])
 
       now = Time.now
       fake_client.should_receive(:read_notification).with(1).
@@ -81,7 +81,7 @@ module Keikokuc
       fake_client.should_receive(:read_notification).with(2).
         and_return([[], :an_error])
 
-      list = build(:notification_list, client: fake_client)
+      list = build(:notification_list, :client => fake_client)
 
       list.fetch or raise "error fetching"
 
@@ -93,8 +93,8 @@ module Keikokuc
     include_context 'specs with a fake client'
     include_context 'with user notifications'
     it 'is true when there are no notifications' do
-      fake_client.stub(get_notifications: [user_notifications, nil])
-      notification_list = build(:notification_list, client: fake_client)
+      fake_client.stub(:get_notifications => [user_notifications, nil])
+      notification_list = build(:notification_list, :client => fake_client)
 
       expect(notification_list.empty?).to be_true
 
@@ -107,8 +107,8 @@ module Keikokuc
   describe NotificationList, '#notifications=' do
     it 'assigns notifications' do
       list = build(:notification_list)
-      list.notifications = [build(:notification, message: 'one'),
-                            build(:notification, message: 'two')]
+      list.notifications = [build(:notification, :message => 'one'),
+                            build(:notification, :message => 'two')]
 
       expect(list.map { |n| n.message }).to eq(%w[one two])
     end

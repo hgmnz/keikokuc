@@ -10,9 +10,9 @@ module Keikokuc
           expect(args[:account_email]).to eq('harold@heroku.com')
         end.and_return([{ id: 1 }, nil])
 
-      notification = build(:notification, message: 'hello',
-                                          account_email: 'harold@heroku.com',
-                                          client: fake_client)
+      notification = build(:notification, :message       => 'hello',
+                                          :account_email => 'harold@heroku.com',
+                                          :client        => fake_client)
 
       result = notification.publish
       expect(result).to be_true
@@ -29,7 +29,8 @@ module Keikokuc
         and_return([{ errors: { attributes: { message: ['is not present'] }}},
                    Keikokuc::Client::InvalidNotification])
 
-      notification = build(:notification, message: nil, client: fake_client)
+      notification = build(:notification, :message => nil,
+                                          :client  => fake_client)
 
       result = notification.publish
       expect(result).to be_false
@@ -39,7 +40,7 @@ module Keikokuc
     end
 
     it 'stores attributes as instance vars' do
-      notification = Notification.new(message: 'foo')
+      notification = Notification.new(:message => 'foo')
       expect(notification.message).to eq('foo')
     end
   end
@@ -52,7 +53,7 @@ module Keikokuc
         with('1234').
         and_return([{read_at: Time.now}, nil])
 
-      notification = Notification.new(remote_id: '1234', client: fake_client)
+      notification = Notification.new(:remote_id => '1234', :client => fake_client)
 
       result = notification.read
       expect(result).to be_true
@@ -67,7 +68,8 @@ module Keikokuc
         with('1234').
         and_return([{}, :some_error])
 
-      notification = Notification.new(remote_id: '1234', client: fake_client)
+      notification = Notification.new(:remote_id => '1234',
+                                      :client    => fake_client)
 
       result = notification.read
       expect(result).to be_false
@@ -79,7 +81,7 @@ module Keikokuc
 
   describe Notification, '#read?' do
     it 'is true if the read_at is known' do
-      notification = build(:notification, read_at: nil)
+      notification = build(:notification, :read_at => nil)
       expect(notification.read?).to be_false
 
       notification.read_at = Time.now
@@ -96,7 +98,7 @@ module Keikokuc
     end
 
     it 'can be injected' do
-      notification = Notification.new(client: :foo)
+      notification = Notification.new(:client => :foo)
       expect(notification.client).to eq(:foo)
     end
   end

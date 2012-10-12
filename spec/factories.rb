@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :notification, class: Keikokuc::Notification do
+  factory :notification, :class => Keikokuc::Notification do
     skip_create
 
     message       'Your database is over limits'
@@ -10,7 +10,9 @@ FactoryGirl.define do
     initialize_with { new(attributes) }
   end
 
-  factory :notification_list, class: Keikokuc::NotificationList do
+  factory :notification_list, :class => Keikokuc::NotificationList do
+    skip_create
+
     user     'user@example.com'
     password 'pass'
 
