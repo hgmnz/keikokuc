@@ -6,7 +6,7 @@
 #
 #   notification = Keikokuc::Notification.new(message: 'hello',
 #                                             severity: 'info',
-#                                             target: 'sunny-skies-42'
+#                                             target_name: 'sunny-skies-42'
 #                                             producer_api_key: 'abcd')
 #   if notification.publish
 #     # persist notification
