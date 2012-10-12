@@ -54,8 +54,8 @@ module Keikokuc
       ShamRack.mount(fake_keikoku, "keikoku.herokuapp.com", 443)
       fake_keikoku.register_publisher(:api_key => 'abc')
       fake_keikoku.register_user(:email => 'harold@heroku.com', :password => 'pass')
-      build(:notification, :account_email => 'harold@heroku.com', :message => 'find me!', :producer_api_key => 'abc').publish
-      build(:notification, :account_email => 'another@heroku.com', :producer_api_key => 'abc').publish
+      build_notification(:account_email => 'harold@heroku.com', :message => 'find me!', :producer_api_key => 'abc').publish
+      build_notification(:account_email => 'another@heroku.com', :producer_api_key => 'abc').publish
 
       client = Client.new(:user => 'harold@heroku.com', :password => 'pass')
 
@@ -93,8 +93,8 @@ module Keikokuc
       fake_keikoku.register_publisher(:api_key => 'abc')
       fake_keikoku.register_user(:email => 'harold@heroku.com', :password => 'pass')
       client = Client.new(:user => 'harold@heroku.com', :password => 'pass')
-      notification = build(:notification, :account_email    => 'harold@heroku.com',
-                                          :producer_api_key => 'abc')
+      notification = build_notification(:account_email    => 'harold@heroku.com',
+                                        :producer_api_key => 'abc')
       notification.publish or raise "Notification publish error"
 
       response, error = client.read_notification(notification.remote_id)

@@ -10,9 +10,9 @@ module Keikokuc
           expect(args[:account_email]).to eq('harold@heroku.com')
         end.and_return([{ id: 1 }, nil])
 
-      notification = build(:notification, :message       => 'hello',
-                                          :account_email => 'harold@heroku.com',
-                                          :client        => fake_client)
+      notification = build_notification(:message       => 'hello',
+                                        :account_email => 'harold@heroku.com',
+                                        :client        => fake_client)
 
       result = notification.publish
       expect(result).to be_true
@@ -29,8 +29,8 @@ module Keikokuc
         and_return([{ errors: { attributes: { message: ['is not present'] }}},
                    Keikokuc::Client::InvalidNotification])
 
-      notification = build(:notification, :message => nil,
-                                          :client  => fake_client)
+      notification = build_notification(:message => nil,
+                                        :client  => fake_client)
 
       result = notification.publish
       expect(result).to be_false
@@ -81,7 +81,7 @@ module Keikokuc
 
   describe Notification, '#read?' do
     it 'is true if the read_at is known' do
-      notification = build(:notification, :read_at => nil)
+      notification = build_notification(:read_at => nil)
       expect(notification.read?).to be_false
 
       notification.read_at = Time.now
@@ -92,7 +92,7 @@ module Keikokuc
 
   describe Notification, '#client' do
     it 'defaults to a properly constructer Keikokuc::Client' do
-      notification = build(:notification, producer_api_key: 'fake-api-key')
+      notification = build_notification(producer_api_key: 'fake-api-key')
       expect(notification.client).to be_kind_of(Keikokuc::Client)
       expect(notification.client.producer_api_key).to eq('fake-api-key')
     end

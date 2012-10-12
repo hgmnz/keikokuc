@@ -18,6 +18,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'rest-client'
   gem.add_dependency 'yajl-ruby'
   gem.add_development_dependency 'rspec'
-  gem.add_development_dependency 'factory_girl'
   gem.add_development_dependency 'sham_rack'
 end

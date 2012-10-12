@@ -31,7 +31,7 @@ module Keikokuc
     it 'finds all notifications for the current user' do
       fake_client.should_receive(:get_notifications).
         and_return([user_notifications, nil])
-      list = build(:notification_list, :client => fake_client)
+      list = build_notification_list(:client => fake_client)
 
       result = list.fetch
       expect(result).to be_true
@@ -60,7 +60,7 @@ module Keikokuc
       fake_client.should_receive(:read_notification).with(2).
         and_return([{:read_at => now}, nil])
 
-      list = build(:notification_list, :client => fake_client)
+      list = build_notification_list(:client => fake_client)
 
       list.fetch or raise "error fetching"
 
@@ -81,7 +81,7 @@ module Keikokuc
       fake_client.should_receive(:read_notification).with(2).
         and_return([[], :an_error])
 
-      list = build(:notification_list, :client => fake_client)
+      list = build_notification_list(:client => fake_client)
 
       list.fetch or raise "error fetching"
 
@@ -94,7 +94,7 @@ module Keikokuc
     include_context 'with user notifications'
     it 'is true when there are no notifications' do
       fake_client.stub(:get_notifications => [user_notifications, nil])
-      notification_list = build(:notification_list, :client => fake_client)
+      notification_list = build_notification_list(:client => fake_client)
 
       expect(notification_list.empty?).to be_true
 
@@ -106,9 +106,9 @@ module Keikokuc
 
   describe NotificationList, '#notifications=' do
     it 'assigns notifications' do
-      list = build(:notification_list)
-      list.notifications = [build(:notification, :message => 'one'),
-                            build(:notification, :message => 'two')]
+      list = build_notification_list
+      list.notifications = [build_notification(:message => 'one'),
+                            build_notification(:message => 'two')]
 
       expect(list.map { |n| n.message }).to eq(%w[one two])
     end
