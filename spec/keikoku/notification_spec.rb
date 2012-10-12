@@ -8,7 +8,7 @@ module Keikokuc
         should_receive(:post_notification).with do |args|
           expect(args[:message]).to eq('hello')
           expect(args[:account_email]).to eq('harold@heroku.com')
-        end.and_return([{ id: 1 }, nil])
+        end.and_return([{ :id => 1 }, nil])
 
       notification = build_notification(:message       => 'hello',
                                         :account_email => 'harold@heroku.com',
@@ -26,7 +26,7 @@ module Keikokuc
         should_receive(:post_notification).with do |args|
           expect(args[:message]).to be_nil
         end.
-        and_return([{ errors: { attributes: { message: ['is not present'] }}},
+        and_return([{ :errors => { :attributes => { :message => ['is not present'] }}},
                    Keikokuc::Client::InvalidNotification])
 
       notification = build_notification(:message => nil,
@@ -51,7 +51,7 @@ module Keikokuc
 
       fake_client.should_receive(:read_notification).
         with('1234').
-        and_return([{read_at: Time.now}, nil])
+        and_return([{:read_at => Time.now}, nil])
 
       notification = Notification.new(:remote_id => '1234', :client => fake_client)
 
