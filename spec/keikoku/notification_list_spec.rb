@@ -52,7 +52,7 @@ module Keikokuc
     include_context 'with user notifications'
 
     it 'marks all notifications as read' do
-      fake_client.stub(get_notifications: [user_notifications, nil])
+      fake_client.stub(:get_notifications => [user_notifications, nil])
 
       now = Time.now
       fake_client.should_receive(:read_notification).with(1).
