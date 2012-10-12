@@ -77,7 +77,7 @@ module Keikokuc
 
       now = Time.now
       fake_client.should_receive(:read_notification).with(1).
-        and_return([{read_at: now}, nil])
+        and_return([{:read_at => now}, nil])
       fake_client.should_receive(:read_notification).with(2).
         and_return([[], :an_error])
 
