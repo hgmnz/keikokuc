@@ -2,6 +2,7 @@
 
 Wrapper to the keikoku API
 
+[![Build Status](https://secure.travis-ci.org/hgmnz/keikokuc.png)](http://travis-ci.org/hgmnz/keikokuc)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/hgmnz/keikokuc)
 
 ## Installation
