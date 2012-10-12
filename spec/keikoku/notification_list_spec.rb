@@ -1,9 +1,34 @@
 require 'spec_helper'
 
 module Keikokuc
+  shared_context 'specs with a fake client' do
+    let(:fake_client) { double(:fake_client) }
+  end
+  shared_context 'with user notifications' do
+    let(:user_notifications) do
+      [
+        {
+          id:           1,
+          target_name:  'flying-monkey-123',
+          message:      'Database HEROKU_POSTGRESQL_BROWN is over row limits',
+          url:          'https://devcenter.heroku.com/how-to-fix-problem',
+          severity:     'info'
+        },
+        {
+          id:           2,
+          target_name:  'rising-cloud-42',
+          message:      'High OOM rates',
+          url:          'https://devcenter.heroku.com/oom',
+          severity:     'fatal'
+        }
+      ]
+    end
+  end
+
   describe NotificationList, '#fetch' do
+    include_context 'specs with a fake client'
+    include_context 'with user notifications'
     it 'finds all notifications for the current user' do
-      fake_client = double
       fake_client.should_receive(:get_notifications).
         and_return([user_notifications, nil])
       list = build(:notification_list, client: fake_client)
@@ -20,21 +45,31 @@ module Keikokuc
       end
     end
 
-    def user_notifications
-      [
-        {
-          resource: 'flying-monkey-123',
-          message:  'Database HEROKU_POSTGRESQL_BROWN is over row limits',
-          url:      'https://devcenter.heroku.com/how-to-fix-problem',
-          severity: 'info'
-        },
-        {
-          resource: 'rising-cloud-42',
-          message:  'High OOM rates',
-          url:      'https://devcenter.heroku.com/oom',
-          severity: 'fatal'
-        }
-      ]
+  end
+
+  describe NotificationList, '#read_all' do
+    include_context 'specs with a fake client'
+    include_context 'with user notifications'
+
+    it 'marks all notifications as read' do
+      fake_client.stub(get_notifications: [user_notifications, nil])
+
+      now = Time.now
+      fake_client.should_receive(:read_notification).with(1).
+        and_return(read_at: now)
+      fake_client.should_receive(:read_notification).with(2).
+        and_return(read_at: now)
+
+      list = build(:notification_list, client: fake_client)
+
+      list.fetch
+
+      list.read_all
+
+      list.each do |notification|
+        expect(notification).to be_read
+        expect(notification.read_at).to eq(now)
+      end
     end
   end
 end

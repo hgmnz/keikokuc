@@ -46,11 +46,16 @@ class Keikokuc::NotificationList
     result, error = client.get_notifications
     if error.nil?
       @notifications = result.map do |attributes|
+        attributes.merge!(client: client, remote_id: attributes.delete(:id))
         Keikokuc::Notification.new(attributes)
       end
     end
 
     error.nil?
+  end
+
+  def read_all
+    self.each { |notification| notification.read }
   end
 
   # Public: the number of notifications
@@ -64,7 +69,7 @@ class Keikokuc::NotificationList
   #
   # Yields every notification in this collection
   def each
-    @notifications.each
+    @notifications.each { |n| yield n }
   end
 
 private
