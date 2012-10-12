@@ -37,7 +37,6 @@ class Keikokuc::Notification
         send("#{attribute}=", opts[attribute.to_sym])
       end
     end
-    @read   = false
     @client = opts[:client]
   end
 
