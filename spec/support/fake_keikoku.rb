@@ -51,6 +51,8 @@ class FakeKeikoku
           end
           notification.mark_read_by!(current_user)
           [200, {}, [Yajl::Encoder.encode({read_by: current_user, read_at: Time.now})]]
+        else
+          [401, { }, ["Not authorized"]]
         end
       end
     end

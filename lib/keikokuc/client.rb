@@ -84,9 +84,14 @@ class Keikokuc::Client
   # remote_id - the keikoku id for the notification to mark as read
   #
   def read_notification(remote_id)
-    response = notifications_api["/#{remote_id}/read"].post ''
-    [parse_json(response), nil]
+    begin
+      response = notifications_api["/#{remote_id}/read"].post ''
+      [parse_json(response), nil]
+    rescue RestClient::Unauthorized
+      [{}, Unauthorized]
+    end
   end
+
 
 private
   def notifications_api # :nodoc:

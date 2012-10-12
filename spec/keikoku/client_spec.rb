@@ -102,5 +102,14 @@ module Keikokuc
       response[:read_by].should == 'harold@heroku.com'
       response[:read_at].should_not be_nil
     end
+
+    it 'handles authentication errors' do
+      ShamRack.mount(fake_keikoku, "keikoku.herokuapp.com", 443)
+      fake_keikoku.register_user(email: 'harold@heroku.com', password: 'pass')
+      client = Client.new(user: 'harold@heroku.com', password: 'bad-pass')
+      response, error = client.read_notification(1)
+      response.should be_empty
+      error.should == Client::Unauthorized
+    end
   end
 end
