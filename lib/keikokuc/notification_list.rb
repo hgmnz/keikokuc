@@ -87,7 +87,7 @@ class Keikokuc::NotificationList
 
   # Internal: assigns notifications
   #
-  # Allos notifications to be injected, useful in tests
+  # Allows notifications to be injected, useful in tests
   def notifications=(new_notification)
     @notifications = new_notification
   end
