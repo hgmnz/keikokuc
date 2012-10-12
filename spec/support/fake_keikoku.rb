@@ -31,9 +31,9 @@ class FakeKeikoku
     with_rack_env(env) do
       if request_path == '/api/v1/notifications' && request_verb == 'POST'
         if publisher_by_api_key(request_api_key)
-          notification = Notification.new({id: next_id}.merge(request_body))
+          notification = Notification.new({:id => next_id}.merge(request_body))
           @notifications << notification
-          [200, { }, [Yajl::Encoder.encode({id: notification.id})]]
+          [200, { }, [Yajl::Encoder.encode({:id => notification.id})]]
         else
           [401, { }, ["Not authorized"]]
         end
@@ -50,7 +50,7 @@ class FakeKeikoku
             notification.to_hash[:id].to_s == $1.to_s
           end
           notification.mark_read_by!(current_user)
-          [200, {}, [Yajl::Encoder.encode({read_by: current_user, read_at: Time.now})]]
+          [200, {}, [Yajl::Encoder.encode({:read_by => current_user, :read_at => Time.now})]]
         else
           [401, { }, ["Not authorized"]]
         end
