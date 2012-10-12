@@ -32,7 +32,7 @@ module Keikokuc
     it 'handles authentication failures' do
       ShamRack.mount(fake_keikoku, "keikoku.herokuapp.com", 443)
       fake_keikoku.register_publisher({:api_key => 'abc'})
-      client = Client.new(producer_api_key: 'bad one')
+      client = Client.new(:producer_api_key => 'bad one')
       result, error = client.post_notification(:message  => 'hello',
                                                :severity => 'info')
       expect(result[:id]).to be_nil
