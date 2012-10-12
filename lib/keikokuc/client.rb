@@ -83,6 +83,14 @@ class Keikokuc::Client
   #
   # remote_id - the keikoku id for the notification to mark as read
   #
+  # two objects:
+  #   The response as a hash
+  #   The error if any (nil if no error)
+  #
+  # Possible errors include:
+  #
+  # * `Client::Timeout` if the request takes longer than 5 seconds
+  # * `Client::Unauthorized` if HTTP Basic auth fails
   def read_notification(remote_id)
     begin
       response = notifications_api["/#{remote_id}/read"].post ''
