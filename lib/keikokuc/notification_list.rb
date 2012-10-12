@@ -54,8 +54,14 @@ class Keikokuc::NotificationList
     error.nil?
   end
 
+  # Public: marks all notifications as read
+  #
+  # This is a convenience method for marking all underlying notifications
+  # as read.
+  #
+  # Returns a Boolean set to true if all notifications were read successfully.
   def read_all
-    self.each { |notification| notification.read }
+    self.inject(true) { |result, notification| result && notification.read }
   end
 
   # Public: the number of notifications

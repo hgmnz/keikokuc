@@ -56,20 +56,37 @@ module Keikokuc
 
       now = Time.now
       fake_client.should_receive(:read_notification).with(1).
-        and_return(read_at: now)
+        and_return([{read_at: now}, nil])
       fake_client.should_receive(:read_notification).with(2).
-        and_return(read_at: now)
+        and_return([{read_at: now}, nil])
 
       list = build(:notification_list, client: fake_client)
 
-      list.fetch
+      list.fetch or raise "error fetching"
 
-      list.read_all
+      expect(list.read_all).to be_true
 
       list.each do |notification|
         expect(notification).to be_read
         expect(notification.read_at).to eq(now)
       end
     end
+
+    it 'returns false if any notification fails to be marked as read' do
+      fake_client.stub(get_notifications: [user_notifications, nil])
+
+      now = Time.now
+      fake_client.should_receive(:read_notification).with(1).
+        and_return([{read_at: now}, nil])
+      fake_client.should_receive(:read_notification).with(2).
+        and_return([[], :an_error])
+
+      list = build(:notification_list, client: fake_client)
+
+      list.fetch or raise "error fetching"
+
+      expect(list.read_all).to be_false
+    end
+
   end
 end
