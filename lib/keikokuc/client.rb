@@ -91,6 +91,7 @@ class Keikokuc::Client
       [{}, Unauthorized]
     end
   end
+  handle_timeout :read_notification
 
 
 private

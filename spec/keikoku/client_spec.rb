@@ -111,5 +111,12 @@ module Keikokuc
       response.should be_empty
       error.should == Client::Unauthorized
     end
+
+    it 'handles timeouts' do
+      RestClient::Resource.any_instance.stub(:post).and_raise Timeout::Error
+      response, error = Client.new.read_notification(1)
+      response.should be_nil
+      error.should == Client::RequestTimeout
+    end
   end
 end
