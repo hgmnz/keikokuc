@@ -95,7 +95,7 @@ class Keikokuc::NotificationList
 
 private
   def client # :nodoc:
-    @client ||= Client.new(:user     => user,
-                           :password => password)
+    @client ||= Keikokuc::Client.new(:user     => user,
+                                     :password => password)
   end
 end
