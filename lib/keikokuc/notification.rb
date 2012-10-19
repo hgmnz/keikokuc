@@ -15,12 +15,10 @@
 #   end
 #
 class Keikokuc::Notification
-  ATTRS = %w[message url severity
-             target_name account_email
-             producer_api_key remote_id
-             errors read_at account_sequence].freeze
-
-  attr_accessor *ATTRS
+  attr_accessor :message, :url, :severity,
+                :target_name, :account_email,
+                :producer_api_key, :remote_id,
+                :errors, :read_at, :account_sequence
 
   # Public: Initialize a notification
   #
@@ -30,14 +28,19 @@ class Keikokuc::Notification
   #
   #   notification = Keikokuc::Notification.new(message: 'hello')
   #
-  # All keys on matching ATTRS will be set
+  # All keys on the attr_accessor list will be set
   def initialize(opts = {})
-    ATTRS.each do |attribute|
-      if opts.has_key?(attribute.to_sym)
-        send("#{attribute}=", opts[attribute.to_sym])
-      end
-    end
-    @client = opts[:client]
+    @message          = opts[:message]
+    @url              = opts[:url]
+    @severity         = opts[:severity]
+    @target_name      = opts[:target_name]
+    @account_email    = opts[:account_email]
+    @producer_api_key = opts[:producer_api_key]
+    @remote_id        = opts[:remote_id]
+    @errors           = opts[:errors]
+    @read_at          = opts[:read_at]
+    @account_sequence = opts[:account_sequence]
+    @client           = opts[:client]
   end
 
   # Public: publishes this notification to keikoku
@@ -82,10 +85,19 @@ class Keikokuc::Notification
   #
   # Returns this notification's attributes as a hash
   def to_hash
-    ATTRS.inject({}) do |h, attribute|
-      h[attribute.to_sym] = send(attribute)
-      h
-    end
+    {
+      message:          @message,
+      url:              @url,
+      severity:         @severity,
+      target_name:      @target_name,
+      account_email:    @account_email,
+      producer_api_key: @producer_api_key,
+      remote_id:        @remote_id,
+      errors:           @errors,
+      read_at:          @read_at,
+      account_sequence: @account_sequence,
+      client:           @client
+    }
   end
 
   def client # :nodoc:
