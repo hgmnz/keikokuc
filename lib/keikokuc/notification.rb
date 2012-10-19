@@ -86,17 +86,17 @@ class Keikokuc::Notification
   # Returns this notification's attributes as a hash
   def to_hash
     {
-      message:          @message,
-      url:              @url,
-      severity:         @severity,
-      target_name:      @target_name,
-      account_email:    @account_email,
-      producer_api_key: @producer_api_key,
-      remote_id:        @remote_id,
-      errors:           @errors,
-      read_at:          @read_at,
-      account_sequence: @account_sequence,
-      client:           @client
+      :message          => @message,
+      :url              => @url,
+      :severity         => @severity,
+      :target_name      => @target_name,
+      :account_email    => @account_email,
+      :producer_api_key => @producer_api_key,
+      :remote_id        => @remote_id,
+      :errors           => @errors,
+      :read_at          => @read_at,
+      :account_sequence => @account_sequence,
+      :client           => @client
     }
   end
 
