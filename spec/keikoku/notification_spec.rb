@@ -57,9 +57,6 @@ module Keikokuc
 
       result = notification.read
       expect(result).to be_true
-
-      expect(notification.read_at).to be_within(1).of(Time.now)
-      expect(notification).to be_read
     end
 
     it 'handles errors' do
