@@ -17,7 +17,7 @@
 class Keikokuc::Notification
   attr_accessor :message, :url, :severity,
                 :target_name, :account_email,
-                :producer_api_key, :producer_username,
+                :producer_api_key, :username,
                 :remote_id, :errors, :account_sequence
 
   # Public: Initialize a notification
@@ -36,7 +36,7 @@ class Keikokuc::Notification
     @target_name       = opts[:target_name]
     @account_email     = opts[:account_email]
     @producer_api_key  = opts[:producer_api_key]
-    @producer_username = opts[:producer_username]
+    @username = opts[:username]
     @remote_id         = opts[:remote_id]
     @errors            = opts[:errors]
     @account_sequence  = opts[:account_sequence]
@@ -93,7 +93,7 @@ class Keikokuc::Notification
 
   def client # :nodoc:
     @client ||= Keikokuc::Client.new(
-      :producer_username => producer_username,
+      :username => username,
       :api_key           => producer_api_key
     )
   end

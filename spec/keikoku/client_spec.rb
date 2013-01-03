@@ -12,7 +12,7 @@ module Keikokuc
     it 'publishes a new notification' do
       ShamRack.mount(fake_keikoku, "keikoku.herokuapp.com", 443)
       fake_keikoku.register_producer({:api_key => 'abc', :username => 'heroku-postgres'})
-      client = Client.new(:api_key => 'abc', :producer_username => 'heroku-postgres')
+      client = Client.new(:api_key => 'abc', :username => 'heroku-postgres')
       result, error = client.post_notification(:message  => 'hello',
                                                :severity => 'info')
       expect(result[:id]).not_to be_nil
@@ -32,7 +32,7 @@ module Keikokuc
     it 'handles authentication failures' do
       ShamRack.mount(fake_keikoku, "keikoku.herokuapp.com", 443)
       fake_keikoku.register_producer({:api_key => 'abc', :username => 'heroku-postgres'})
-      client = Client.new(:api_key => 'bad one', :producer_username => 'heroku-postgres')
+      client = Client.new(:api_key => 'bad one', :username => 'heroku-postgres')
       result, error = client.post_notification(:message  => 'hello',
                                                :severity => 'info')
       expect(result[:id]).to be_nil
@@ -55,9 +55,9 @@ module Keikokuc
       fake_keikoku.register_producer(:username => 'heroku-postgres', :api_key => 'abc')
       fake_keikoku.register_user(:api_key => 'api-key', :account_email => 'harold@heroku.com')
       build_notification(:account_email => 'harold@heroku.com', :message => 'find me!',
-                         :producer_api_key => 'abc', :producer_username => 'heroku-postgres').publish
+                         :producer_api_key => 'abc', :username => 'heroku-postgres').publish
       build_notification(:account_email => 'another@heroku.com', :producer_api_key => 'abc',
-                         :producer_username => 'heroku-postgres').publish
+                         :username => 'heroku-postgres').publish
 
       client = Client.new(:api_key => 'api-key')
 
@@ -99,7 +99,7 @@ module Keikokuc
       client = Client.new(:api_key => 'api-key')
       notification = build_notification(:account_email     => 'harold@heroku.com',
                                         :producer_api_key  => 'abc',
-                                        :producer_username => 'heroku-postgres')
+                                        :username => 'heroku-postgres')
       notification.publish or raise "Notification publish error"
 
       response, error = client.read_notification(notification.remote_id)

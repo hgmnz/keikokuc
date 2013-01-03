@@ -11,11 +11,11 @@ class Keikokuc::Client
   InvalidNotification = Class.new
   Unauthorized = Class.new
 
-  attr_accessor :producer_username, :api_key
+  attr_accessor :username, :api_key
 
   def initialize(opts = {})
     @api_key  = opts.fetch(:api_key)
-    @producer_username = opts[:producer_username]
+    @username = opts[:username]
   end
 
   # Internal: posts a new notification to keikoku
@@ -105,7 +105,7 @@ private
   def notifications_api # :nodoc:
     @notifications_api ||= RestClient::Resource.new(
       api_url,
-      :user     => producer_username || '',
+      :user     => username || '',
       :password => api_key
     )
   end
