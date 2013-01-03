@@ -8,8 +8,7 @@
 #
 # Examples
 #
-#   notifications = Keikokuc::NotificationList.new(user:    'user@example.com',
-#                                                  api_key: 'abcd')
+#   notifications = Keikokuc::NotificationList.new(api_key: 'abcd')
 #   if notifications.fetch
 #     notifications.each do |notification|
 #       puts notification.inspect

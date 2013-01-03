@@ -7,7 +7,8 @@
 #   notification = Keikokuc::Notification.new(message: 'hello',
 #                                             severity: 'info',
 #                                             target_name: 'sunny-skies-42'
-#                                             producer_api_key: 'abcd')
+#                                             producer_api_key: 'abcd',
+#                                             username: 'heroku-postgres')
 #   if notification.publish
 #     # persist notification
 #   else
@@ -36,7 +37,7 @@ class Keikokuc::Notification
     @target_name       = opts[:target_name]
     @account_email     = opts[:account_email]
     @producer_api_key  = opts[:producer_api_key]
-    @username = opts[:username]
+    @username          = opts[:username]
     @remote_id         = opts[:remote_id]
     @errors            = opts[:errors]
     @account_sequence  = opts[:account_sequence]
@@ -94,7 +95,7 @@ class Keikokuc::Notification
   def client # :nodoc:
     @client ||= Keikokuc::Client.new(
       :username => username,
-      :api_key           => producer_api_key
+      :api_key  => producer_api_key
     )
   end
 end

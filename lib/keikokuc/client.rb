@@ -13,6 +13,11 @@ class Keikokuc::Client
 
   attr_accessor :username, :api_key
 
+  # Internal: Initialize a Client
+  #
+  # opts = a hash containing two possible attributes:
+  #   api_key - the user's or producer's API key (required)
+  #   username - the producer's username (only required for publishers)
   def initialize(opts = {})
     @api_key  = opts.fetch(:api_key)
     @username = opts[:username]
@@ -24,7 +29,8 @@ class Keikokuc::Client
   #
   # Examples
   #
-  #   client = Keikokuc::Client.new(producer_api_key: 'abcd')
+  #   client = Keikokuc::Client.new(username: 'heroku-postgres',
+  #                                  api_key: 'abcd')
   #   response, error = client.post_notification(message: 'hello')
   #
   # Returns
@@ -81,6 +87,8 @@ class Keikokuc::Client
   # Public: Marks a notification as read
   #
   # remote_id - the keikoku id for the notification to mark as read
+  #
+  # Returns
   #
   # two objects:
   #   The response as a hash
