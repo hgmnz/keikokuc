@@ -26,8 +26,6 @@ class FakeKeikoku
   end
 
   def notifications_for_user(email)
-    puts "Finding notifications for #{email}"
-    puts "All notifications: #{@notifications}"
     @notifications.select do |notification|
       notification.to_hash['account_email'] == email
     end
