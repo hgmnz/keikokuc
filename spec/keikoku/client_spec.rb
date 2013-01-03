@@ -24,7 +24,7 @@ module Keikokuc
         [422, {}, StringIO.new(OkJson.encode({ 'errors' => 'srorre' }))]
       end
 
-      response, error = Client.new.post_notification({})
+      response, error = Client.new(:api_key => 'key').post_notification({})
       expect(error).to be Client::InvalidNotification
       expect(response[:errors]).to eq('srorre')
     end
@@ -41,7 +41,7 @@ module Keikokuc
 
     it 'handles timeouts' do
       RestClient::Resource.any_instance.stub(:post).and_raise Timeout::Error
-      response, error = Client.new.post_notification({})
+      response, error = Client.new(:api_key => 'key').post_notification({})
       expect(response).to be_nil
       expect(error).to eq(Client::RequestTimeout)
     end
@@ -71,7 +71,7 @@ module Keikokuc
 
     it 'handles timeouts' do
       RestClient::Resource.any_instance.stub(:get).and_raise Timeout::Error
-      response, error = Client.new.get_notifications
+      response, error = Client.new(:api_key => 'key').get_notifications
       expect(response).to be_nil
       expect(error).to eq(Client::RequestTimeout)
     end
@@ -119,7 +119,7 @@ module Keikokuc
 
     it 'handles timeouts' do
       RestClient::Resource.any_instance.stub(:post).and_raise Timeout::Error
-      response, error = Client.new.read_notification(1)
+      response, error = Client.new(:api_key => 'key').read_notification(1)
       expect(response).to be_nil
       expect(error).to eq(Client::RequestTimeout)
     end

@@ -14,7 +14,7 @@ class Keikokuc::Client
   attr_accessor :producer_username, :api_key
 
   def initialize(opts = {})
-    @api_key           = opts[:api_key]
+    @api_key  = opts.fetch(:api_key)
     @producer_username = opts[:producer_username]
   end
 
