@@ -55,8 +55,8 @@ module Keikokuc
       fake_keikoku.register_producer(:username => 'heroku-postgres', :api_key => 'abc')
       fake_keikoku.register_user(:api_key => 'api-key', :account_email => 'harold@heroku.com')
       build_notification(:account_email => 'harold@heroku.com', :message => 'find me!',
-                         :producer_api_key => 'abc', :username => 'heroku-postgres').publish
-      build_notification(:account_email => 'another@heroku.com', :producer_api_key => 'abc',
+                         :producer_password => 'abc', :username => 'heroku-postgres').publish
+      build_notification(:account_email => 'another@heroku.com', :producer_password => 'abc',
                          :username => 'heroku-postgres').publish
 
       client = Client.new(:api_key => 'api-key')
@@ -98,7 +98,7 @@ module Keikokuc
       fake_keikoku.register_user(:api_key => 'api-key', :account_email => 'harold@heroku.com')
       client = Client.new(:api_key => 'api-key')
       notification = build_notification(:account_email     => 'harold@heroku.com',
-                                        :producer_api_key  => 'abc',
+                                        :producer_password  => 'abc',
                                         :username => 'heroku-postgres')
       notification.publish or raise "Notification publish error"
 

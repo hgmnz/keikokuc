@@ -7,7 +7,7 @@
 #   notification = Keikokuc::Notification.new(message: 'hello',
 #                                             severity: 'info',
 #                                             target_name: 'sunny-skies-42'
-#                                             producer_api_key: 'abcd',
+#                                             producer_password: 'abcd',
 #                                             username: 'heroku-postgres')
 #   if notification.publish
 #     # persist notification
@@ -18,7 +18,7 @@
 class Keikokuc::Notification
   attr_accessor :message, :url, :severity,
                 :target_name, :account_email,
-                :producer_api_key, :username,
+                :producer_password, :username,
                 :remote_id, :errors, :account_sequence
 
   # Public: Initialize a notification
@@ -36,7 +36,7 @@ class Keikokuc::Notification
     @severity          = opts[:severity]
     @target_name       = opts[:target_name]
     @account_email     = opts[:account_email]
-    @producer_api_key  = opts[:producer_api_key]
+    @producer_password = opts[:producer_password]
     @username          = opts[:username]
     @remote_id         = opts[:remote_id]
     @errors            = opts[:errors]
@@ -79,23 +79,23 @@ class Keikokuc::Notification
   # Returns this notification's attributes as a hash
   def to_hash
     {
-      :message          => @message,
-      :url              => @url,
-      :severity         => @severity,
-      :target_name      => @target_name,
-      :account_email    => @account_email,
-      :producer_api_key => @producer_api_key,
-      :remote_id        => @remote_id,
-      :errors           => @errors,
-      :account_sequence => @account_sequence,
-      :client           => @client
+      :message           => @message,
+      :url               => @url,
+      :severity          => @severity,
+      :target_name       => @target_name,
+      :account_email     => @account_email,
+      :producer_password => @producer_password,
+      :remote_id         => @remote_id,
+      :errors            => @errors,
+      :account_sequence  => @account_sequence,
+      :client            => @client
     }
   end
 
   def client # :nodoc:
     @client ||= Keikokuc::Client.new(
       :username => username,
-      :api_key  => producer_api_key
+      :api_key  => producer_password
     )
   end
 end

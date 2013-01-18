@@ -75,7 +75,7 @@ module Keikokuc
 
   describe Notification, '#client' do
     it 'defaults to a properly constructer Keikokuc::Client' do
-      notification = build_notification(:producer_api_key => 'fake-api-key', :username => 'heroku-postgres')
+      notification = build_notification(:producer_password => 'fake-api-key', :username => 'heroku-postgres')
       expect(notification.client).to be_kind_of(Keikokuc::Client)
       expect(notification.client.api_key).to eq('fake-api-key')
       expect(notification.client.username).to eq('heroku-postgres')
